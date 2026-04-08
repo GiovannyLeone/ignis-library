@@ -56,7 +56,7 @@ O **IGNIS** é uma aplicação web que gerencia de forma eficiente o acervo lite
 
 ### 1. Clone o repositório
 ```bash
-git clone https://github.com/papirotech/ignis-library.git
+git clone https://github.com/GiovannyLeone/ignis-library.git
 cd ignis-library
 ```
 
