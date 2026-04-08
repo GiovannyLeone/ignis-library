@@ -2,7 +2,6 @@ package br.com.ignis.biblioteca.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Data
@@ -10,6 +9,7 @@ import java.time.LocalDate;
 @Table(name = "tb_usuario")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Pessoa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
@@ -39,4 +39,6 @@ public abstract class Pessoa {
     @ManyToOne
     @JoinColumn(name = "id_acl")
     private ACL acl;
+
+    public abstract void cadastrarCliente();
 }
