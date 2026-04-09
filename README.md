@@ -21,7 +21,7 @@
 
 ## 📋 Sobre o Projeto
 
-O **IGNIS** é uma aplicação web que gerencia de forma eficiente o acervo literário, o cadastro de clientes e as operações de empréstimo e devolução de uma biblioteca. O sistema atende três perfis de usuário — **Administrador**, **Estoquista** e **Cliente** — com permissões controladas via ACL.
+O **IGNIS** é uma aplicação web que gerencia de forma eficiente o acervo literário, o cadastro de clientes e as operações de empréstimo e devolução de uma biblioteca. O sistema atende três perfis de usuário — **Administrador**, **src.main.java.com.papirotech.biblioteca.entity.Estoquista** e **Cliente** — com permissões controladas via ACL.
 
 ### Funcionalidades principais
 - 📚 Cadastro e gerenciamento de acervo de livros
