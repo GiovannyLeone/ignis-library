@@ -19,7 +19,7 @@ Descreva o que precisa ser implementado.
 ## 🎭 Ator Principal
 - [ ] Administrador
 - [ ] Cliente
-- [ ] src.main.java.com.papirotech.biblioteca.entity.Estoquista
+- [ ] Estoquista
 
 ## 🔗 Casos de Uso Relacionados
 Informe os UCs relacionados (ex.: UC01, UC06)
