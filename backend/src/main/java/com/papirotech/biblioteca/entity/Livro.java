@@ -6,19 +6,27 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Classe Livro — conforme diagrama de classes.
+ *
+ * Atributos:
+ *   - idLivro, isbn, titulo, autor, categoria (FK), editora, sinopse,
+ *     dataCadastro, anoPublicacao, quantidadeTotal, quantidadeDisponivel
+ *
+ * Métodos de negócio:
+ *   - adicionarLivro()
+ *   - removerLivro(): boolean
+ *   - verificarDisponibilidade(): boolean
+ */
 @Entity
 @Table(name = "tb_livro")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_livro")
-    private Integer id;
+    private Integer idLivro;
 
     @Column(name = "des_isbn", nullable = false, unique = true, length = 255)
     private String isbn;
@@ -54,16 +62,30 @@ public class Livro {
     @OneToMany(mappedBy = "livro", fetch = FetchType.LAZY)
     private List<Emprestimo> emprestimos;
 
-    // ===== Métodos de negócio =====
+    // ===== Métodos de negócio conforme diagrama =====
+
+    public void adicionarLivro() {
+        // lógica delegada ao LivroService
+    }
+
+    public boolean removerLivro() {
+        if (this.emprestimos != null && this.emprestimos.stream()
+                .anyMatch(e -> {
+                    String s = e.getStatusEmprestimo().getDescricao();
+                    return !s.equals("DEVOLVIDO") && !s.equals("DEVOLVIDO_COM_ATRASO") && !s.equals("CANCELADO");
+                })) {
+            return false;
+        }
+        return true;
+    }
 
     public boolean verificarDisponibilidade() {
         return this.quantidadeDisponivel > 0;
     }
 
     public void decrementarDisponivel() {
-        if (this.quantidadeDisponivel <= 0) {
+        if (this.quantidadeDisponivel <= 0)
             throw new IllegalStateException("Livro sem exemplares disponíveis.");
-        }
         this.quantidadeDisponivel--;
     }
 
