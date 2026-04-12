@@ -40,5 +40,9 @@ public abstract class Pessoa {
     @JoinColumn(name = "id_acl")
     private ACL acl;
 
-    public abstract void cadastrarCliente();
+    // ===== Métodos de negócio =====
+
+    public abstract void cadastrarCliente(){
+        // lógica de persistência delegada ao PessoaService
+    };
 }
