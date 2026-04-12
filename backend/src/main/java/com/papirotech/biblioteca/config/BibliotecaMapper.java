@@ -14,7 +14,7 @@ public class BibliotecaMapper {
 
     public LivroResponse toResponse(Livro l) {
         return new LivroResponse(
-                l.getId(), l.getIsbn(), l.getTitulo(), l.getAutor(),
+                l.getIdLivro(), l.getIsbn(), l.getTitulo(), l.getAutor(),
                 l.getEditora(), l.getSinopse(), l.getDataCadastro(),
                 l.getAnoPublicacao(), l.getQuantidadeTotal(),
                 l.getQuantidadeDisponivel(), toResponse(l.getCategoria()),
@@ -22,24 +22,37 @@ public class BibliotecaMapper {
         );
     }
 
-    public UsuarioResponse toResponse(Usuario u) {
-        return new UsuarioResponse(
-                u.getId(), u.getNome(), u.getEmail(), u.getCpf(),
-                u.getDataNascimento(), u.getSexo(), u.getStatus(), u.getPerfil()
+    public PessoaResponse toResponse(Pessoa p) {
+        // status só existe em Cliente — verifica o tipo
+        String status = null;
+        if (p instanceof Cliente cliente && cliente.getStatus() != null) {
+            status = cliente.getStatus().getDescricao().name();
+        }
+        return new PessoaResponse(
+                p.getId(), p.getNome(), p.getEmail(), p.getCpf(),
+                p.getDataNascimento(), p.getSexo(),
+                status,
+                p.getAcl() != null ? p.getAcl().getDescricao().name() : null
         );
     }
 
     public EmprestimoResponse toResponse(Emprestimo e) {
         return new EmprestimoResponse(
-                e.getId(), e.getCodigoRetirada(), e.getCodigoDevolucao(),
-                e.getDataEmprestimo(), e.getDataDevolucaoPrevista(),
-                e.getDataDevolucaoReal(), e.getStatus(), e.getPenalidadeGerada(),
-                toResponse(e.getLivro()), toResponse(e.getUsuario())
+                e.getId(),
+                e.getCodigoRetiradaEmprestimo(),
+                e.getCodigoDevolucaoEmprestimo(),
+                e.getDataEmprestimo(),
+                e.getDataDevolucaoPrevista(),
+                e.getDataDevolucaoReal(),
+                e.getStatusEmprestimo().getDescricao().name(),
+                e.getPenalidadeGerada(),
+                toResponse(e.getLivro()),
+                toResponse(e.getCliente())
         );
     }
 
     public FavoritoResponse toResponse(Favorito f) {
-        return new FavoritoResponse(f.getId(), toResponse(f.getLivro()), true);
+        return new FavoritoResponse(f.getId(), toResponse(f.getLivro()));
     }
 
     public <T> PageResponse<T> toPageResponse(Page<T> page) {
