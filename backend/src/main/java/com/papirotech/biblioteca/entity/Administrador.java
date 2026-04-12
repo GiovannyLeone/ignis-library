@@ -9,9 +9,9 @@ import java.time.LocalDate;
 @Data  //Cria os getters e setters durante a compilação
 
 public class Administrador extends Pessoa {    //"extends" garante que adm herde os atributos de Pessoa
-
+    @Column(name = "des_cargo", length = 255)
     //2- Atributos do adm
-    @Column(name = "des_cargo", length = 255)  //As informaçõe serão guardadas dentro desse coluna
+     //As informaçõe serão guardadas dentro desse coluna
     private String cargo;  //Aqui fica guardado a função do adm
 
     //3- Método para aplicar penalidades
