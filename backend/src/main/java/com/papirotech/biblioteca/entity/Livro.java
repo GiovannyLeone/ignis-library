@@ -1,5 +1,6 @@
 package com.papirotech.biblioteca.entity;
 
+import com.papirotech.biblioteca.enums.StatusEmprestimo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -71,8 +72,10 @@ public class Livro {
     public boolean removerLivro() {
         if (this.emprestimos != null && this.emprestimos.stream()
                 .anyMatch(e -> {
-                    String s = e.getStatusEmprestimo().getDescricao();
-                    return !s.equals("DEVOLVIDO") && !s.equals("DEVOLVIDO_COM_ATRASO") && !s.equals("CANCELADO");
+                    StatusEmprestimo s = e.getStatusEmprestimo().getDescricao();
+                    return s != StatusEmprestimo.DEVOLVIDO
+                            && s != StatusEmprestimo.DEVOLVIDO_COM_ATRASO
+                            && s != StatusEmprestimo.CANCELADO;
                 })) {
             return false;
         }
