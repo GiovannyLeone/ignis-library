@@ -1,0 +1,27 @@
+# =============================================================
+# .gitignore — Biblioteca IGNIS
+# =============================================================
+
+# Credenciais — NUNCA subir no GitHub
+.env
+
+# Maven
+target/
+*.jar
+*.war
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+*.settings/
+
+# Logs
+*.log
+logs/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
