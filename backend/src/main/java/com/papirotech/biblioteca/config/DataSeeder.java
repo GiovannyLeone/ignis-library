@@ -30,13 +30,13 @@ import java.util.List;
 @Slf4j
 public class DataSeeder implements CommandLineRunner {
 
-    private final AdministradorRepository    administradorRepository;
+    //private final AdministradorRepository    administradorRepository;
     private final ClienteRepository          clienteRepository;
-    private final EstoquistaRepository       estoquistaRepository;
-    private final LivroRepository            livroRepository;
-    private final CategoriaRepository        categoriaRepository;
-    private final AclRepository              aclRepository;
-    private final StatusUsuarioRepository    statusUsuarioRepository;
+    //private final EstoquistaRepository       estoquistaRepository;
+    //private final LivroRepository            livroRepository;
+    //private final CategoriaRepository        categoriaRepository;
+    //private final AclRepository              aclRepository;
+    //private final StatusUsuarioRepository    statusUsuarioRepository;
     private final PasswordEncoder            passwordEncoder;
 
     @Override
@@ -122,15 +122,15 @@ public class DataSeeder implements CommandLineRunner {
         log.info(">>> 2 livros de exemplo criados");
     }
 
-    private Acl buscarAcl(PerfilAcesso perfil) {
-        return aclRepository.findByDescricao(perfil)
-                .orElseThrow(() -> new RuntimeException("ACL não encontrada: " + perfil
-                        + ". Verifique se a migration V2 foi executada."));
-    }
+//    private Acl buscarAcl(PerfilAcesso perfil) {
+//        return aclRepository.findByDescricao(perfil)
+//                .orElseThrow(() -> new RuntimeException("ACL não encontrada: " + perfil
+//                        + ". Verifique se a migration V2 foi executada."));
+//    }
 
-    private StatusUsuario buscarStatus(StatusCliente status) {
-        return statusUsuarioRepository.findByDescricao(status)
-                .orElseThrow(() -> new RuntimeException("Status não encontrado: " + status
-                        + ". Verifique se a migration V2 foi executada."));
-    }
+//    private StatusUsuario buscarStatus(StatusCliente status) {
+//        return statusUsuarioRepository.findByDescricao(status)
+//                .orElseThrow(() -> new RuntimeException("Status não encontrado: " + status
+//                        + ". Verifique se a migration V2 foi executada."));
+//    }
 }
