@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS tb_usuario (
     des_sexo          VARCHAR(255) NOT NULL,
     id_status_usuario INT          NOT NULL,
     id_acl            INT          NOT NULL,
+    des_discriminador VARCHAR(50)  NOT NULL DEFAULT 'CLIENTE',
+    des_cargo         VARCHAR(255) NULL,
     PRIMARY KEY (id_usuario)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

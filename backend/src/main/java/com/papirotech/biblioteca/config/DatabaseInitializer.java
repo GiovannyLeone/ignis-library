@@ -42,6 +42,10 @@ public class DatabaseInitializer implements ApplicationRunner {
 
     // ─── tb_usuario: garante que todas as colunas existem ────────────────────
     private void corrigirTbUsuario() {
+        adicionarColunaSeNaoExistir("tb_usuario", "des_discriminador",
+                "ALTER TABLE tb_usuario ADD COLUMN des_discriminador VARCHAR(50) NOT NULL DEFAULT 'CLIENTE'");
+        adicionarColunaSeNaoExistir("tb_usuario", "des_cargo",
+                "ALTER TABLE tb_usuario ADD COLUMN des_cargo VARCHAR(255) NULL");
         adicionarColunaSeNaoExistir("tb_usuario", "des_nome",
                 "ALTER TABLE tb_usuario ADD COLUMN des_nome VARCHAR(255) NOT NULL DEFAULT ''");
         adicionarColunaSeNaoExistir("tb_usuario", "des_email",
@@ -190,3 +194,4 @@ public class DatabaseInitializer implements ApplicationRunner {
         }
     }
 }
+// Este bloco é automaticamente ignorado pois está fora da classe

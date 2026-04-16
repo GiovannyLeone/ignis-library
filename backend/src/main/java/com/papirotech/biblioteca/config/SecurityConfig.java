@@ -35,12 +35,17 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/clientes/cadastro").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/livros/**").permitAll()
-                // Autenticado
-                .requestMatchers("/api/clientes/**").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.GET,  "/api/livros/**").permitAll()
+
+                // Administrador
+                .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.POST,   "/api/livros/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.PUT,    "/api/livros/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.DELETE, "/api/livros/**").hasRole("ADMINISTRADOR")
+
+                // Cliente
+                .requestMatchers("/api/clientes/**").hasRole("CLIENTE")
+
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authProvider())

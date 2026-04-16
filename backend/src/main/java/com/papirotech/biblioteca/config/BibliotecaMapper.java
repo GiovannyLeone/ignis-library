@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class BibliotecaMapper {
 
-    public UsuarioResponse toResponse(Usuario u) {
+    public UsuarioResponse toResponse(Pessoa p) {
         return new UsuarioResponse(
-            u.getIdUsuario(),
-            u.getNome(),
-            u.getEmail(),
-            u.getCpf(),
-            u.getDataNascimento(),
-            u.getSexo(),
-            u.getStatusUsuario() != null ? u.getStatusUsuario().getDescricao() : null,
-            u.getAcl() != null ? u.getAcl().getDescricao() : null
+            p.getId(),
+            p.getNome(),
+            p.getEmail(),
+            p.getCpf(),
+            p.getDataNascimento(),
+            p.getSexo(),
+            p.getStatusUsuario() != null ? p.getStatusUsuario().getDescricao() : null,
+            p.getAcl() != null ? p.getAcl().getDescricao() : null
         );
     }
 
