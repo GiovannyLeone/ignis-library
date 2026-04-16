@@ -14,16 +14,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ClienteNaoEncontradoException.class)
-    public ProblemDetail handleNotFound(ClienteNaoEncontradoException ex) {
+    @ExceptionHandler({LivroNaoEncontradoException.class, ClienteNaoEncontradoException.class})
+    public ProblemDetail handleNotFound(RuntimeException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         pd.setTitle("Recurso não encontrado");
         pd.setProperty("timestamp", Instant.now());
         return pd;
     }
 
-    @ExceptionHandler(ClienteJaExisteException.class)
-    public ProblemDetail handleConflict(ClienteJaExisteException ex) {
+    @ExceptionHandler({LivroJaExisteException.class, ClienteJaExisteException.class})
+    public ProblemDetail handleConflict(RuntimeException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         pd.setTitle("Conflito de dados");
         pd.setProperty("timestamp", Instant.now());
