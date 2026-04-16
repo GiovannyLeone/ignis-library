@@ -3,11 +3,15 @@ package com.papirotech.biblioteca.service.impl;
 import com.papirotech.biblioteca.config.BibliotecaMapper;
 import com.papirotech.biblioteca.dto.request.AtualizarUsuarioRequest;
 import com.papirotech.biblioteca.dto.request.CadastroUsuarioRequest;
+import com.papirotech.biblioteca.dto.response.PageResponse;
 import com.papirotech.biblioteca.dto.response.UsuarioResponse;
 import com.papirotech.biblioteca.entity.*;
+import com.papirotech.biblioteca.enums.StatusCliente;
 import com.papirotech.biblioteca.exception.*;
 import com.papirotech.biblioteca.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,55 +21,99 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    private final UsuarioRepository     usuarioRepository;
-    private final AclRepository         aclRepository;
+    private final ClienteRepository       clienteRepository;
+    private final AdministradorRepository administradorRepository;
+    private final AclRepository           aclRepository;
     private final StatusUsuarioRepository statusUsuarioRepository;
-    private final PasswordEncoder       passwordEncoder;
-    private final BibliotecaMapper      mapper;
+    private final PasswordEncoder         passwordEncoder;
+    private final BibliotecaMapper        mapper;
+    private final JdbcTemplate            jdbc;
 
-    // ─── RF06: cadastrar Cliente ──────────────────────────────────────────────
+    // ─── RF06: cadastrarCliente() ─────────────────────────────────────────────
     @Transactional
     public UsuarioResponse cadastrar(CadastroUsuarioRequest req) {
-        if (usuarioRepository.existsByEmail(req.email()))
-            throw new ClienteJaExisteException("E-mail já cadastrado: " + req.email());
-        if (usuarioRepository.existsByCpf(req.cpf()))
-            throw new ClienteJaExisteException("CPF já cadastrado.");
+        verificarEmailDuplicado(req.email());
+        verificarCpfDuplicado(req.cpf());
 
-        Usuario u = Usuario.builder()
-            .nome(req.nome())
-            .email(req.email())
-            .cpf(req.cpf())
+        Cliente c = Cliente.builder()
+            .nome(req.nome()).email(req.email()).cpf(req.cpf())
             .senha(passwordEncoder.encode(req.senha()))
-            .dataNascimento(req.dataNascimento())
-            .sexo(req.sexo())
+            .dataNascimento(req.dataNascimento()).sexo(req.sexo())
             .acl(buscarAcl("CLIENTE"))
-            .statusUsuario(buscarStatus("ATIVO"))
+            .statusUsuario(buscarStatus(StatusCliente.ATIVO.name()))
             .build();
 
-        return mapper.toResponse(usuarioRepository.save(u));
+        return mapper.toResponse(clienteRepository.save(c));
+    }
+
+    // ─── Admin: cadastrarAdmin() ──────────────────────────────────────────────
+    @Transactional
+    public UsuarioResponse cadastrarAdmin(CadastroUsuarioRequest req) {
+        verificarEmailDuplicado(req.email());
+        verificarCpfDuplicado(req.cpf());
+
+        Administrador a = Administrador.builder()
+            .nome(req.nome()).email(req.email()).cpf(req.cpf())
+            .senha(passwordEncoder.encode(req.senha()))
+            .dataNascimento(req.dataNascimento()).sexo(req.sexo())
+            .acl(buscarAcl("ADMINISTRADOR"))
+            .statusUsuario(buscarStatus(StatusCliente.ATIVO.name()))
+            .build();
+
+        return mapper.toResponse(administradorRepository.save(a));
     }
 
     // ─── RF16: atualizar próprio perfil ──────────────────────────────────────
     @Transactional
     public UsuarioResponse atualizar(AtualizarUsuarioRequest req) {
-        Usuario u = usuarioLogado();
-        if (req.nome()           != null) u.setNome(req.nome());
-        if (req.email()          != null) u.setEmail(req.email());
-        if (req.dataNascimento() != null) u.setDataNascimento(req.dataNascimento());
-        if (req.sexo()           != null) u.setSexo(req.sexo());
-        if (req.senha()          != null) u.setSenha(passwordEncoder.encode(req.senha()));
-        return mapper.toResponse(usuarioRepository.save(u));
+        Cliente c = clienteLogado();
+        if (req.nome()           != null) c.setNome(req.nome());
+        if (req.email()          != null) c.setEmail(req.email());
+        if (req.dataNascimento() != null) c.setDataNascimento(req.dataNascimento());
+        if (req.sexo()           != null) c.setSexo(req.sexo());
+        if (req.senha()          != null) c.setSenha(passwordEncoder.encode(req.senha()));
+        return mapper.toResponse(clienteRepository.save(c));
     }
 
     public UsuarioResponse buscarPerfil() {
-        return mapper.toResponse(usuarioLogado());
+        return mapper.toResponse(clienteLogado());
+    }
+
+    public PageResponse<UsuarioResponse> listarTodos(int pagina, int tamanho) {
+        Page<UsuarioResponse> page = clienteRepository
+            .findAll(PageRequest.of(pagina, tamanho, Sort.by("nome")))
+            .map(mapper::toResponse);
+        return mapper.toPageResponse(page);
+    }
+
+    public UsuarioResponse buscarPorId(Integer id) {
+        return mapper.toResponse(clienteRepository.findById(id)
+            .orElseThrow(() -> new ClienteNaoEncontradoException("Usuário não encontrado: id=" + id)));
     }
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
-    public Usuario usuarioLogado() {
+    public Cliente clienteLogado() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByEmail(email)
+        return clienteRepository.findByEmail(email)
             .orElseThrow(() -> new ClienteNaoEncontradoException("Usuário não encontrado."));
+    }
+
+    // Verifica e-mail em toda tb_usuario (sem filtro de discriminador)
+    private void verificarEmailDuplicado(String email) {
+        Integer count = jdbc.queryForObject(
+            "SELECT COUNT(*) FROM tb_usuario WHERE des_email = ?",
+            Integer.class, email);
+        if (count != null && count > 0)
+            throw new ClienteJaExisteException("E-mail já cadastrado: " + email);
+    }
+
+    // Verifica CPF em toda tb_usuario (sem filtro de discriminador)
+    private void verificarCpfDuplicado(String cpf) {
+        Integer count = jdbc.queryForObject(
+            "SELECT COUNT(*) FROM tb_usuario WHERE des_cpf = ?",
+            Integer.class, cpf);
+        if (count != null && count > 0)
+            throw new ClienteJaExisteException("CPF já cadastrado.");
     }
 
     private Acl buscarAcl(String descricao) {
