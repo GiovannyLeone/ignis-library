@@ -149,7 +149,7 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?",
                 Integer.class, tabela, coluna);
 
-            if (existe == null || existe.equals(0)) {
+            if (existe == null || existe == 0) {
                 jdbc.execute(sql);
                 log.info(">>> Coluna adicionada: {}.{}", tabela, coluna);
             }
@@ -165,7 +165,7 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?",
                 Integer.class, tabela, nomeIndice);
 
-            if (existe == null || existe.equals(0)) {
+            if (existe == null || existe == 0) {
                 jdbc.execute(sql);
                 log.info(">>> Índice adicionado: {}.{}", tabela, nomeIndice);
             }
@@ -181,7 +181,7 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND CONSTRAINT_NAME = ?",
                 Integer.class, tabela, nomeFk);
 
-            if (existe == null || existe.equals(0)) {
+            if (existe == null || existe == 0) {
                 jdbc.execute(sql);
                 log.info(">>> FK adicionada: {}.{}", tabela, nomeFk);
             }

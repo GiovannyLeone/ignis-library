@@ -31,10 +31,16 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(a -> a
+                // Público
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/clientes/cadastro").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/livros/**").permitAll()
+                // Autenticado
                 .requestMatchers("/api/clientes/**").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.POST,   "/api/livros/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PUT,    "/api/livros/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/livros/**").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authProvider())
