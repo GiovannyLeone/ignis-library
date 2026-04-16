@@ -1,0 +1,46 @@
+package com.papirotech.biblioteca.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Entidade tb_estoquista — conforme seção 7.9 da documentação.
+ * Tabela independente. Não herda de tb_usuario.
+ * Acessa o sistema via codigoAcesso + senha, sem perfil ACL.
+ */
+@Entity
+@Table(name = "tb_estoquista")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class Estoquista implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_estoquista")
+    private Integer idEstoquista;
+
+    @Column(name = "des_codigo_acesso", nullable = false, unique = true, length = 255)
+    private String codigoAcesso;
+
+    @Column(name = "des_senha", nullable = false, length = 255)
+    private String senha;
+
+    // ===== Spring Security — usa codigoAcesso como username =====
+
+    @Override public String getUsername()               { return this.codigoAcesso; }
+    @Override public String getPassword()               { return this.senha; }
+    @Override public boolean isAccountNonExpired()      { return true; }
+    @Override public boolean isCredentialsNonExpired()  { return true; }
+    @Override public boolean isEnabled()                { return true; }
+    @Override public boolean isAccountNonLocked()       { return true; }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_ESTOQUISTA"));
+    }
+}
