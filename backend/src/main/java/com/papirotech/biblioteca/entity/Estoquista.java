@@ -43,4 +43,4 @@ public class Estoquista implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_ESTOQUISTA"));
     }
-}
+}asdada
