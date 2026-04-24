@@ -42,7 +42,17 @@ public abstract class Pessoa {
 
     // ===== Métodos de negócio =====
 
-    public abstract void cadastrarCliente(){
-        // lógica de persistência delegada ao PessoaService
+    public void cadastrarCliente(boolean cpfJaExiste, boolean emailJaExiste, Acl perfilCliente ){  // Os parametros que exige ser entregue para funcionar
+
+        if (cpfJaExiste) {  // Se o CPF ja existir no banco consta o erro
+            throw new ClienteJaExisteException("CPF cadastrado no sistema")  // O erro, lança um parada forçada e em seguida lança a classe de erro
+        }
+
+        if (emailJaExiste) { // Se o email ja existe no banco consta o erro
+            throw new ClienteJaExisteException("Email cadastrado no sistema")   // O erro, lança um parada forçada e em seguida lança a classe de erro
+        }
+
+        this.setAcl(perfilCliente);  // Pega o perfil selecionado e muda o status
+        this.setStatusUsuario(StatusUsuario.ATIVO);  // Deixa o pefil do cliente ativo
     };
 }
