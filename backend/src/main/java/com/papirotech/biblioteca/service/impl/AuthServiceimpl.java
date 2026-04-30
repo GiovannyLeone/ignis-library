@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceimpl implements AuthService {
 
     private final PessoaRepository pessoaRepository;
     private final CriptografiaService criptografiaService;

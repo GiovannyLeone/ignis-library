@@ -47,7 +47,9 @@ public abstract class Pessoa implements UserDetails {
     @JoinColumn(name = "id_acl")
     private Acl acl;
 
-    public abstract void cadastrarCliente();
+    public void cadastrarCliente() {
+
+    }
 
 
     // permitem que o Spring Security leia os dados da Pessoa

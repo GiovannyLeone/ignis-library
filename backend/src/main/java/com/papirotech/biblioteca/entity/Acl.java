@@ -1,11 +1,11 @@
-package br.com.ignis.biblioteca.model;
+package com.papirotech.biblioteca.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data // Get/Set automatico
 @Entity // avisa que a tabela é um banco
 @Table(name = "tb_acl")
-public class ACL {
+public class Acl {
 
     @Id // idAcl é a chave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // garante que não tenha id duplicado
