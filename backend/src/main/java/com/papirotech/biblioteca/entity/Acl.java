@@ -1,6 +1,4 @@
 package com.papirotech.biblioteca.entity;
-
-import com.papirotech.biblioteca.enums.PerfilAcesso;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +9,6 @@ import lombok.*;
  */
 @Entity
 @Table(name = "tb_acl")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Acl {
 
     @Id
