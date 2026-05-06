@@ -1,4 +1,4 @@
-package br.com.ignis.biblioteca.model;
+package com.papirotech.biblioteca.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -38,7 +38,11 @@ public abstract class Pessoa {
 
     @ManyToOne
     @JoinColumn(name = "id_acl")
-    private ACL acl;
+    private Acl acl;
 
-    public abstract void cadastrarCliente();
+    // ===== Métodos de negócio =====
+
+    public abstract void cadastrarCliente(){
+        // lógica de persistência delegada ao PessoaService
+    };
 }
