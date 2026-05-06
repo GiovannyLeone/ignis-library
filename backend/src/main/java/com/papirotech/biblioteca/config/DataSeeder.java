@@ -33,14 +33,11 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void seedAdminPadrao() {
-        // Verifica diretamente no banco se já existe um admin com esse e-mail
-        // independente do discriminador atual
         Integer count = jdbc.queryForObject(
             "SELECT COUNT(*) FROM tb_usuario WHERE des_email = ?",
             Integer.class, "admin@biblioteca.com");
 
         if (count != null && count > 0) {
-            // Garante que o discriminador está correto caso tenha sido criado errado antes
             jdbc.update(
                 "UPDATE tb_usuario SET des_discriminador = 'ADMINISTRADOR', des_cargo = 'Diretor' " +
                 "WHERE des_email = ? AND des_discriminador != 'ADMINISTRADOR'",

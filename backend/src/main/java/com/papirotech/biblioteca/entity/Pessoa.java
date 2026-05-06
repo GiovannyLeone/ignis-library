@@ -7,26 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 
-/**
- * Classe abstrata Pessoa — conforme diagrama de classes seção 3.2.
- * Mapeada para tb_usuario com herança SINGLE_TABLE.
- * Cliente e Administrador herdam desta classe e compartilham tb_usuario,
- * diferenciados pelo campo des_acl (discriminador via id_acl).
- *
- * Atributos: id, nome, cpf, dataNascimento, sexo, email, senha, acl
- * Métodos: getId, getNome/setNome, getCpf/setCpf, getDataNascimento/setDataNascimento,
- *          getSexo/setSexo, getEmail/setEmail, getSenha/setSenha, getAcl/setAcl,
- *          cadastrarCliente()
- */
 @Entity
 @Table(name = "tb_usuario")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "des_discriminador", discriminatorType = DiscriminatorType.STRING)
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @SuperBuilder
 public abstract class Pessoa implements UserDetails {
 
     @Id
@@ -60,21 +45,14 @@ public abstract class Pessoa implements UserDetails {
     @JoinColumn(name = "id_status_usuario", nullable = false)
     private StatusUsuario statusUsuario;
 
-    // ===== Método de negócio conforme diagrama =====
-    public void cadastrarCliente() {
-        // lógica delegada ao UsuarioService
-    }
+    public void cadastrarCliente() {}
 
-    // ===== Spring Security =====
     @Override public String getUsername()               { return this.email; }
     @Override public String getPassword()               { return this.senha; }
     @Override public boolean isAccountNonExpired()      { return true; }
     @Override public boolean isCredentialsNonExpired()  { return true; }
     @Override public boolean isEnabled()                { return true; }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return statusUsuario != null
-            && "ATIVO".equals(statusUsuario.getDescricao());
+    @Override public boolean isAccountNonLocked() {
+        return statusUsuario != null && "ATIVO".equals(statusUsuario.getDescricao());
     }
 }

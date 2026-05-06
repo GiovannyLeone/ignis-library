@@ -1,7 +1,6 @@
 package com.papirotech.biblioteca.controller;
 
-import com.papirotech.biblioteca.dto.request.AtualizarUsuarioRequest;
-import com.papirotech.biblioteca.dto.request.CadastroUsuarioRequest;
+import com.papirotech.biblioteca.dto.request.*;
 import com.papirotech.biblioteca.dto.response.UsuarioResponse;
 import com.papirotech.biblioteca.service.impl.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
