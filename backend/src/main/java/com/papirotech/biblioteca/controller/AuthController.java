@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    @Operation(summary = "Login do Cliente")
+    @Operation(summary = "Login — Cliente, Administrador ou Estoquista")
     public ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest req) {
         return ResponseEntity.ok(authService.login(req));
     }

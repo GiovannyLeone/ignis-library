@@ -10,12 +10,8 @@ public class BibliotecaMapper {
 
     public UsuarioResponse toResponse(Pessoa p) {
         return new UsuarioResponse(
-            p.getId(),
-            p.getNome(),
-            p.getEmail(),
-            p.getCpf(),
-            p.getDataNascimento(),
-            p.getSexo(),
+            p.getId(), p.getNome(), p.getEmail(), p.getCpf(),
+            p.getDataNascimento(), p.getSexo(),
             p.getStatusUsuario() != null ? p.getStatusUsuario().getDescricao() : null,
             p.getAcl() != null ? p.getAcl().getDescricao() : null
         );
@@ -27,29 +23,22 @@ public class BibliotecaMapper {
 
     public LivroResponse toResponse(Livro l) {
         return new LivroResponse(
-            l.getIdLivro(),
-            l.getIsbn(),
-            l.getTitulo(),
-            l.getAutor(),
-            toResponse(l.getCategoria()),
-            l.getEditora(),
-            l.getSinopse(),
-            l.getDataCadastro(),
-            l.getAnoPublicacao(),
-            l.getQuantidadeTotal(),
-            l.getQuantidadeDisponivel(),
+            l.getIdLivro(), l.getIsbn(), l.getTitulo(), l.getAutor(),
+            toResponse(l.getCategoria()), l.getEditora(), l.getSinopse(),
+            l.getDataCadastro(), l.getAnoPublicacao(),
+            l.getQuantidadeTotal(), l.getQuantidadeDisponivel(),
             l.verificarDisponibilidade()
         );
     }
 
+    public FavoritoResponse toResponse(Favorito f) {
+        return new FavoritoResponse(f.getIdFavorito(), toResponse(f.getLivro()));
+    }
+
     public <T> PageResponse<T> toPageResponse(Page<T> page) {
         return new PageResponse<>(
-            page.getContent(),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.isLast()
+            page.getContent(), page.getNumber(), page.getSize(),
+            page.getTotalElements(), page.getTotalPages(), page.isLast()
         );
     }
 }

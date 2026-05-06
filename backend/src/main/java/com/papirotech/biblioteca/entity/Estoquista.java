@@ -9,11 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Entidade tb_estoquista — conforme seção 7.9 da documentação.
- * Tabela independente. Não herda de tb_usuario.
- * Acessa o sistema via codigoAcesso + senha, sem perfil ACL.
- */
 @Entity
 @Table(name = "tb_estoquista")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -30,7 +25,8 @@ public class Estoquista implements UserDetails {
     @Column(name = "des_senha", nullable = false, length = 255)
     private String senha;
 
-    // ===== Spring Security — usa codigoAcesso como username =====
+    public boolean emprestarLivro(Object emprestimo) { return true; }
+    public boolean devolverLivro(Object emprestimo) { return true; }
 
     @Override public String getUsername()               { return this.codigoAcesso; }
     @Override public String getPassword()               { return this.senha; }

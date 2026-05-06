@@ -1,5 +1,4 @@
 package com.papirotech.biblioteca.config;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
@@ -15,59 +14,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-@Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
-@RequiredArgsConstructor
+@Configuration @EnableWebSecurity @EnableMethodSecurity @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final JwtAuthenticationFilter jwtFilter;
     private final CustomUserDetailsService uds;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(a -> a
-                // Público
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/clientes/cadastro").permitAll()
-                .requestMatchers(HttpMethod.GET,  "/api/livros/**").permitAll()
-
-                // Administrador
+                .requestMatchers("/swagger-ui/**","/api-docs/**","/swagger-ui.html").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/clientes/cadastro").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/livros/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.POST,   "/api/livros/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PUT,    "/api/livros/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/livros/**").hasRole("ADMINISTRADOR")
-
-                // Cliente
+                .requestMatchers(HttpMethod.POST,"/api/livros/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PUT,"/api/livros/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.DELETE,"/api/livros/**").hasRole("ADMINISTRADOR")
                 .requestMatchers("/api/clientes/**").hasRole("CLIENTE")
-
+                .requestMatchers("/api/favoritos/**").hasRole("CLIENTE")
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authProvider())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-    @Bean
-    public AuthenticationProvider authProvider() {
-        var p = new DaoAuthenticationProvider();
-        p.setUserDetailsService(uds);
-        p.setPasswordEncoder(encoder());
-        return p;
+    @Bean public AuthenticationProvider authProvider() {
+        var p = new DaoAuthenticationProvider(); p.setUserDetailsService(uds); p.setPasswordEncoder(encoder()); return p;
     }
-
-    @Bean
-    public AuthenticationManager authManager(AuthenticationConfiguration c) throws Exception {
-        return c.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Bean public AuthenticationManager authManager(AuthenticationConfiguration c) throws Exception { return c.getAuthenticationManager(); }
+    @Bean public PasswordEncoder encoder() { return new BCryptPasswordEncoder(); }
 }

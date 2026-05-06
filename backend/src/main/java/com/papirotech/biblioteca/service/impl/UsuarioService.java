@@ -1,10 +1,8 @@
 package com.papirotech.biblioteca.service.impl;
 
 import com.papirotech.biblioteca.config.BibliotecaMapper;
-import com.papirotech.biblioteca.dto.request.AtualizarUsuarioRequest;
-import com.papirotech.biblioteca.dto.request.CadastroUsuarioRequest;
-import com.papirotech.biblioteca.dto.response.PageResponse;
-import com.papirotech.biblioteca.dto.response.UsuarioResponse;
+import com.papirotech.biblioteca.dto.request.*;
+import com.papirotech.biblioteca.dto.response.*;
 import com.papirotech.biblioteca.entity.*;
 import com.papirotech.biblioteca.enums.StatusCliente;
 import com.papirotech.biblioteca.exception.*;
@@ -46,23 +44,6 @@ public class UsuarioService {
         return mapper.toResponse(clienteRepository.save(c));
     }
 
-    // ─── Admin: cadastrarAdmin() ──────────────────────────────────────────────
-    @Transactional
-    public UsuarioResponse cadastrarAdmin(CadastroUsuarioRequest req) {
-        verificarEmailDuplicado(req.email());
-        verificarCpfDuplicado(req.cpf());
-
-        Administrador a = Administrador.builder()
-            .nome(req.nome()).email(req.email()).cpf(req.cpf())
-            .senha(passwordEncoder.encode(req.senha()))
-            .dataNascimento(req.dataNascimento()).sexo(req.sexo())
-            .acl(buscarAcl("ADMINISTRADOR"))
-            .statusUsuario(buscarStatus(StatusCliente.ATIVO.name()))
-            .build();
-
-        return mapper.toResponse(administradorRepository.save(a));
-    }
-
     // ─── RF16: atualizar próprio perfil ──────────────────────────────────────
     @Transactional
     public UsuarioResponse atualizar(AtualizarUsuarioRequest req) {
@@ -98,20 +79,16 @@ public class UsuarioService {
             .orElseThrow(() -> new ClienteNaoEncontradoException("Usuário não encontrado."));
     }
 
-    // Verifica e-mail em toda tb_usuario (sem filtro de discriminador)
     private void verificarEmailDuplicado(String email) {
         Integer count = jdbc.queryForObject(
-            "SELECT COUNT(*) FROM tb_usuario WHERE des_email = ?",
-            Integer.class, email);
+            "SELECT COUNT(*) FROM tb_usuario WHERE des_email = ?", Integer.class, email);
         if (count != null && count > 0)
             throw new ClienteJaExisteException("E-mail já cadastrado: " + email);
     }
 
-    // Verifica CPF em toda tb_usuario (sem filtro de discriminador)
     private void verificarCpfDuplicado(String cpf) {
         Integer count = jdbc.queryForObject(
-            "SELECT COUNT(*) FROM tb_usuario WHERE des_cpf = ?",
-            Integer.class, cpf);
+            "SELECT COUNT(*) FROM tb_usuario WHERE des_cpf = ?", Integer.class, cpf);
         if (count != null && count > 0)
             throw new ClienteJaExisteException("CPF já cadastrado.");
     }

@@ -5,27 +5,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-/**
- * Classe Livro — conforme diagrama de classes seção 3.1.
- *
- * Atributos:
- *   - idLivro : int (PK)
- *   - isbn : String
- *   - titulo : String
- *   - autor : String
- *   - categoria : String (FK → tb_categoria)
- *   - editora : String
- *   - sinopse : String
- *   - dataCadastro : Date
- *   - anoPublicacao : int
- *   - quantidadeTotal : int
- *   - quantidadeDisponivel : int
- *
- * Métodos de negócio:
- *   + adicionarLivro() : void
- *   + removerLivro() : boolean
- *   + verificarDisponibilidade() : boolean
- */
 @Entity
 @Table(name = "tb_livro")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -45,7 +24,6 @@ public class Livro {
     @Column(name = "des_autor", nullable = false, length = 255)
     private String autor;
 
-    // categoria : String — FK → tb_categoria (seção 3.1)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
@@ -68,23 +46,14 @@ public class Livro {
     @Column(name = "num_quantidade_disponivel", nullable = false)
     private Integer quantidadeDisponivel;
 
-    // ===== Métodos de negócio conforme diagrama =====
+    public void adicionarLivro() {}
 
-    public void adicionarLivro() {
-        // lógica delegada ao LivroService
-    }
-
-    public boolean removerLivro() {
-        // lógica delegada ao LivroService
-        // retorna false se houver empréstimos ativos
-        return true;
-    }
+    public boolean removerLivro() { return true; }
 
     public boolean verificarDisponibilidade() {
         return this.quantidadeDisponivel > 0;
     }
 
-    // Helpers internos
     public void decrementarDisponivel() {
         if (this.quantidadeDisponivel <= 0)
             throw new IllegalStateException("Livro sem exemplares disponíveis.");
