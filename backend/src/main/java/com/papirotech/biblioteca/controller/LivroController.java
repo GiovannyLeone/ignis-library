@@ -1,31 +1,35 @@
 package com.papirotech.biblioteca.controller;
 
 import com.papirotech.biblioteca.entity.Livro;
-import com.papirotech.biblioteca.service.LivroService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.papirotech.biblioteca.service.impl.LivroServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/livros")
+@RequestMapping("/api/livros")
+@RequiredArgsConstructor
 public class LivroController {
 
-    @Autowired
-    private LivroService livroService;
+    private final LivroServiceImpl livroService;
 
-    @PostMapping
-    public ResponseEntity<?> adicionarLivro(@RequestBody Livro livro) {
-        try {
-            Livro livroSalvo = livroService.adicionarLivro(livro);
+    // RF04
+    @GetMapping("/consulta")
+    public ResponseEntity<List<Livro>> consultarAcervo(@RequestParam(required = false) String termo) {
+        return ResponseEntity.ok(livroService.consultarAcervo(termo));
+    }
 
-            // se der certo, retorna o status 201 (Created) e os dados do livro
-            return ResponseEntity.status(HttpStatus.CREATED).body(livroSalvo);
+    // RF05
+    @GetMapping("/disponiveis")
+    public ResponseEntity<List<Livro>> listarLivrosParaEmprestimo() {
+        return ResponseEntity.ok(livroService.listarLivrosParaEmprestimo());
+    }
 
-        } catch (RuntimeException e) {
-            // se o Service lançar aquele erro do ISBN duplicado, vem p ca
-            // retorna o status 400 (Bad Request) com a mensagem de erro
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    // RF11
+    @GetMapping("/{id}/disponibilidade")
+    public ResponseEntity<Boolean> verificarDisponibilidade(@PathVariable Integer id) {
+        return ResponseEntity.ok(livroService.verificarDisponibilidade(id));
     }
 }

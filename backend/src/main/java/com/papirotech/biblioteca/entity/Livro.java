@@ -83,7 +83,7 @@ public class Livro {
 //    }
 
     public boolean verificarDisponibilidade() {
-        return this.quantidadeDisponivel > 0;
+        return this.quantidadeDisponivel != null && this.quantidadeDisponivel > 0;
     }
 
     public void decrementarDisponivel() {
