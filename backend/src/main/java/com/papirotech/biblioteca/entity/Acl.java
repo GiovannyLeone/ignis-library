@@ -1,17 +1,30 @@
 package com.papirotech.biblioteca.entity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data // Get/Set automatico
-@Entity // avisa que a tabela é um banco
+/**
+ * Entidade tb_acl — tabela real no banco conforme diagrama de banco.
+ * Usa o enum PerfilAcesso (ADMINISTRADOR, CLIENTE, ESTOQUISTA)
+ * conforme diagrama de classes.
+ */
+@Entity
 @Table(name = "tb_acl")
 public class Acl {
 
-    @Id // idAcl é a chave primaria
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // garante que não tenha id duplicado
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_acl")
-    private int idAcl;
+    private Integer id;
 
-    @Column(name = "des_acl", nullable = false, length = 255)
-    private String descricao;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "des_acl", nullable = false, columnDefinition = "VARCHAR(50)")
+    private PerfilAcesso descricao;
+
+    public Acl(PerfilAcesso descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricaoStr() {
+        return descricao != null ? descricao.name() : null;
+    }
 }
