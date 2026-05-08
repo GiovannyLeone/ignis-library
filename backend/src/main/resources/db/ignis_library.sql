@@ -59,10 +59,10 @@ CREATE TABLE IF NOT EXISTS tb_status_emprestimo (
 CREATE TABLE IF NOT EXISTS tb_emprestimo (
     id_emprestimo          INT NOT NULL AUTO_INCREMENT,
     des_codigo_retirada    VARCHAR(255) NOT NULL,
-    des_codigo_devolucao   VARCHAR(255) NOT NULL,
+    des_codigo_devolucao   VARCHAR(255) NULL,
     dat_emprestimo         DATETIME NOT NULL,
     dat_devolucao_prevista DATE NOT NULL,
-    dat_devolucao_real     DATE NOT NULL,
+    dat_devolucao_real     DATE NULL,
     bit_penalidade_gerada  TINYINT NOT NULL DEFAULT 0,
     id_usuario             INT NOT NULL,
     id_livro               INT NOT NULL,

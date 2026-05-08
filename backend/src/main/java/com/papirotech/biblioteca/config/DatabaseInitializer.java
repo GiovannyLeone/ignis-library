@@ -21,6 +21,7 @@ public class DatabaseInitializer implements ApplicationRunner {
         log.info(">>> DatabaseInitializer: verificando estrutura do banco...");
         corrigirTbUsuario();
         adicionarFks();
+        corrigirTbEmprestimo();
         log.info(">>> DatabaseInitializer: banco verificado e atualizado.");
     }
 
@@ -93,5 +94,14 @@ public class DatabaseInitializer implements ApplicationRunner {
                 Integer.class, tabela, nome);
             if (existe == null || existe == 0) { jdbc.execute(sql); log.info(">>> FK adicionada: {}.{}", tabela, nome); }
         } catch (Exception e) { log.warn(">>> Não foi possível adicionar FK {}.{}: {}", tabela, nome, e.getMessage()); }
+    }
+
+    private void corrigirTbEmprestimo() {
+        try {
+            jdbc.execute("ALTER TABLE tb_emprestimo MODIFY COLUMN des_codigo_devolucao VARCHAR(255) NULL");
+            jdbc.execute("ALTER TABLE tb_emprestimo MODIFY COLUMN dat_devolucao_real DATE NULL");
+        } catch (Exception e) {
+            // Já está correto ou tabela não existe ainda
+        }
     }
 }

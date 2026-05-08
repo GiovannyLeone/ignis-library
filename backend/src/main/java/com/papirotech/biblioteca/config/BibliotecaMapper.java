@@ -35,6 +35,21 @@ public class BibliotecaMapper {
         return new FavoritoResponse(f.getIdFavorito(), toResponse(f.getLivro()));
     }
 
+    public EmprestimoResponse toResponse(Emprestimo e) {
+        return new EmprestimoResponse(
+            e.getId(),
+            e.getCodigoRetiradaEmprestimo(),
+            e.getCodigoDevolucaoEmprestimo(),
+            e.getDataEmprestimo(),
+            e.getDataDevolucaoPrevista(),
+            e.getDataDevolucaoReal(),
+            e.getStatus() != null ? e.getStatus().getDescricao() : null,
+            e.getPenalidadeGerada(),
+            toResponse(e.getLivro()),
+            toResponse(e.getCliente())
+        );
+    }
+
     public <T> PageResponse<T> toPageResponse(Page<T> page) {
         return new PageResponse<>(
             page.getContent(), page.getNumber(), page.getSize(),

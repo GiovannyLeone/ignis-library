@@ -23,6 +23,7 @@ public class DataSeeder implements CommandLineRunner {
     private final StatusUsuarioRepository statusUsuarioRepository;
     private final AdministradorRepository administradorRepository;
     private final ClienteRepository       clienteRepository;
+    private final EstoquistaRepository    estoquistaRepository;
     private final PasswordEncoder         passwordEncoder;
     private final JdbcTemplate            jdbc;
 
@@ -30,6 +31,7 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) {
         seedAdminPadrao();
         seedClientePadrao();
+        seedEstoquistaPadrao();
     }
 
     private void seedAdminPadrao() {
@@ -99,5 +101,16 @@ public class DataSeeder implements CommandLineRunner {
     private StatusUsuario buscarStatus(String descricao) {
         return statusUsuarioRepository.findByDescricao(descricao)
             .orElseThrow(() -> new RuntimeException("Status não encontrado: " + descricao));
+    }
+
+    private void seedEstoquistaPadrao() {
+        if (estoquistaRepository.existsByCodigoAcesso("EST001")) return;
+
+        estoquistaRepository.save(Estoquista.builder()
+            .codigoAcesso("EST001")
+            .senha(passwordEncoder.encode("estoque123"))
+            .build());
+
+        log.info(">>> Estoquista padrão criado: EST001 / estoque123");
     }
 }

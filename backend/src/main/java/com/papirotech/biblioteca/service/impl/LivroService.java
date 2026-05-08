@@ -19,6 +19,7 @@ public class LivroService {
 
     private final LivroRepository     livroRepository;
     private final CategoriaRepository categoriaRepository;
+    private final EmprestimoRepository  emprestimoRepository;
     private final BibliotecaMapper    mapper;
 
     // ─── RF01: adicionarLivro() ───────────────────────────────────────────────
@@ -60,7 +61,8 @@ public class LivroService {
     @Transactional
     public void remover(Integer idLivro) {
         Livro livro = buscarEntidade(idLivro);
-        if (!livro.removerLivro())
+        // Verifica empréstimos ativos antes de remover — removerLivro() seção 3.1
+        if (emprestimoRepository.existsEmprestimoAtivoDoLivro(idLivro))
             throw new RuntimeException("Livro possui empréstimos ativos e não pode ser removido.");
         livroRepository.deleteById(idLivro);
     }
