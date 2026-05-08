@@ -9,6 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Classe Estoquista — seção 3.6.
+ * Tabela independente tb_estoquista. Acessa via codigoAcesso + senha.
+ */
 @Entity
 @Table(name = "tb_estoquista")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -25,8 +29,14 @@ public class Estoquista implements UserDetails {
     @Column(name = "des_senha", nullable = false, length = 255)
     private String senha;
 
-    public boolean emprestarLivro(Object emprestimo) { return true; }
-    public boolean devolverLivro(Object emprestimo) { return true; }
+    // ===== Métodos de negócio conforme diagrama =====
+    // Lógica real delegada ao EmprestimoService
+
+    public boolean emprestarLivro(Emprestimo emprestimo) { return true; }
+
+    public boolean devolverLivro(Emprestimo emprestimo) { return true; }
+
+    // ===== Spring Security =====
 
     @Override public String getUsername()               { return this.codigoAcesso; }
     @Override public String getPassword()               { return this.senha; }
