@@ -35,4 +35,9 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Integer>
     @Query("SELECT e FROM Emprestimo e WHERE e.status.descricao = 'ATIVO' " +
            "AND e.dataDevolucaoPrevista < CURRENT_DATE")
     List<Emprestimo> findEmprestimosAtrasados();
+
+    // Reservas com mais de 24h sem retirada — para job de cancelar
+    @Query("SELECT e FROM Emprestimo e WHERE e.status.descricao = 'RESERVADO' " +
+           "AND e.dataEmprestimo < :limite")
+    List<Emprestimo> findReservasExpiradasAntesDe(@Param("limite") java.time.LocalDateTime limite);
 }
