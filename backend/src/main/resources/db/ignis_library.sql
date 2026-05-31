@@ -30,8 +30,9 @@ CREATE TABLE IF NOT EXISTS tb_usuario (
 CREATE TABLE IF NOT EXISTS tb_categoria (
     id_categoria  INT NOT NULL AUTO_INCREMENT,
     des_categoria VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id_categoria)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    PRIMARY KEY (id_categoria),
+    UNIQUE KEY uk_categoria_descricao (des_categoria)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS tb_livro (
     id_livro                  INT NOT NULL AUTO_INCREMENT,

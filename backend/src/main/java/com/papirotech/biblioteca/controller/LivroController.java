@@ -2,6 +2,7 @@ package com.papirotech.biblioteca.controller;
 
 import com.papirotech.biblioteca.dto.request.*;
 import com.papirotech.biblioteca.dto.response.*;
+import com.papirotech.biblioteca.repository.CategoriaRepository;
 import com.papirotech.biblioteca.service.impl.LivroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +12,8 @@ import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/livros")
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class LivroController {
 
     private final LivroService livroService;
+    private final CategoriaRepository categoriaRepository;
 
     @GetMapping
     @Operation(summary = "RF05 — Listar todos os livros (público)")
@@ -42,6 +46,15 @@ public class LivroController {
             @RequestParam(defaultValue = "0") int pagina,
             @RequestParam(defaultValue = "10") int tamanho) {
         return ResponseEntity.ok(livroService.buscar(termo, pagina, tamanho));
+    }
+
+    @GetMapping("/categorias")
+    @Operation(summary = "Listar todas as categorias (público)")
+    public ResponseEntity<List<CategoriaResponse>> listarCategorias() {
+        return ResponseEntity.ok(categoriaRepository.findAll()
+                .stream()
+                .map(c -> new CategoriaResponse(c.getIdCategoria(), c.getDescricao()))
+                .toList());
     }
 
     @GetMapping("/{id}")

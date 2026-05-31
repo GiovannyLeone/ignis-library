@@ -2,6 +2,7 @@ package com.papirotech.biblioteca.exception;
 
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,6 +30,12 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleBusiness(AcessoNegadoException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         pd.setTitle("Acesso negado"); pd.setProperty("timestamp", Instant.now()); return pd;
+    }
+
+    @ExceptionHandler(LockedException.class)
+    public ProblemDetail handleLocked(LockedException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        pd.setTitle("Conta bloqueada"); pd.setProperty("timestamp", Instant.now()); return pd;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
