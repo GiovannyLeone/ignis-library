@@ -19,8 +19,12 @@ public class AuthService {
     private final EstoquistaRepository    estoquistaRepository;
 
     public TokenResponse login(LoginRequest req) {
-        authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(req.login(), req.senha()));
+        try {
+            authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(req.login(), req.senha()));
+        } catch (LockedException e) {
+            throw new LockedException("Conta bloqueada. Entre em contato com a biblioteca.");
+        }
 
         var adminOpt = administradorRepository.findByEmail(req.login());
         if (adminOpt.isPresent()) {
@@ -35,8 +39,8 @@ public class AuthService {
         }
 
         var estoquista = estoquistaRepository.findByCodigoAcesso(req.login())
-            .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas."));
+                .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas."));
         return new TokenResponse(
-            jwtService.gerarToken(estoquista), "Bearer", "ESTOQUISTA", estoquista.getCodigoAcesso());
+                jwtService.gerarToken(estoquista), "Bearer", "ESTOQUISTA", estoquista.getCodigoAcesso());
     }
 }
